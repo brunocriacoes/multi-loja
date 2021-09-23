@@ -8,10 +8,22 @@ class Pedido extends Banco
     }
     function all($adm=0) {
         $sql = "SELECT * FROM pedido";
-        return $this->query($sql);
+        if( $adm != 0 ) {
+            $sql = "SELECT  
+            p.id as id,
+            p.total as total,
+            p.comprador_id as comprador_id,
+            p.status as status
+            from pedido p 
+            JOIN pedido_iten i
+            on p.id = i.pedido_id  
+            WHERE i.fornecedor_id = $adm 
+            GROUP BY p.id";
+        }
+        $result =  $this->query($sql);
+        return $result;
     }
-    function add($comprador_id) {
-        
+    function add($comprador_id) {        
         $sql = "INSERT INTO pedido (total, comprador_id,status) VALUES (0,$comprador_id, 'await')";
         $this->exec($sql);
     }

@@ -41,11 +41,11 @@ if ($acao == 'add-produto') {
 
 <body>
     <form action="">
-        <label for="">Fornecedor</label>
+        <label for="">Relatorio por Fornecedor</label>
         <select name="adm">
             <option value="0">ADM</option>
             <?php foreach ($fornecedor->all() as $forn) : ?>
-                <option value="<?= $forn['id'] ?>"><?= $forn['nome'] ?></option>
+                <option value="<?= $forn['id'] ?>" <?= $forn['id'] == $adm ? 'selected': '' ?>  > <?= $forn['id'] ?> - <?= $forn['nome'] ?></option>
             <?php endforeach; ?>
         </select>
         <button>Visualizar</button>
@@ -64,13 +64,25 @@ if ($acao == 'add-produto') {
 
             <?php foreach ($pedido->intens($forn['id']) as $item) : ?>
                 <?php $fornecedor = $item['fornecedor_id']; ?>
-                <li>
-                    Fornecedor: <?= $fornecedor ?>
-                    Produto: <?= $item['produto_id'] ?>
-                    quantidade: <?= $item['quantidade'] ?>
-                    Subtotal: <?= $item['quantidade'] * $item['quantidade'] ?>
-                    <?php $total += $item['quantidade'] * $item['quantidade']; ?>
-                </li>
+                    <?php if($adm==0): ?>
+                        <li>
+                            Fornecedor: <?= $fornecedor ?>
+                            Produto: <?= $item['produto_id'] ?>
+                            quantidade: <?= $item['quantidade'] ?>
+                            Subtotal: <?= $item['quantidade'] * $item['quantidade'] ?>
+                            <?php $total += $item['quantidade'] * $item['quantidade']; ?>
+                        </li>
+                    <?php endif;?> 
+                    <?php if($adm!=0&&$fornecedor==$adm): ?>
+                        <li>
+                            Fornecedor: <?= $fornecedor ?>
+                            Produto: <?= $item['produto_id'] ?>
+                            quantidade: <?= $item['quantidade'] ?>
+                            Subtotal: <?= $item['quantidade'] * $item['quantidade'] ?>
+                            <?php $total += $item['quantidade'] * $item['quantidade']; ?>
+                        </li>
+                    <?php endif;?>
+
             <?php endforeach; ?>
 
             total: <?= $total ?>
